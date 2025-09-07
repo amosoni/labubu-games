@@ -1,0 +1,162 @@
+# Labubu Game Website Generation Prompt and README
+
+Below is a comprehensive response based on our discussion. I'll first provide a **complete website generation prompt** that encapsulates all the key elements we've covered: branding, design, functionality, technical stack (Next.js with App Router), i18n (default English with scalability), SEO for inner pages, iframe embedding, and automated game scraping for regular updates. This prompt can be used as a blueprint for developers, AI code generators, or tools like GitHub Copilot to build the site.
+
+Following that, I'll provide a **README.md document** in Markdown format, suitable for your project's GitHub repository or documentation.
+
+## Complete Website Generation Prompt
+
+**Project Name**: Labubu Game  
+**Overview**: Create a full-stack web application for "Labubu Game," an online game aggregator site targeted at 8-25-year-old female users. The site features a cute, dreamlike monster theme inspired by the popular 2025 Labubu blind box toys (e.g., colorful fur, big teeth, elf ears), but avoid direct IP infringement by using original "cute monster" designs. It aggregates free HTML5 games (e.g., dress-up, makeup, simulation, nurturing, adventure) from sources like Poki, Y8, and CrazyGames, embedded via iframes. Use Next.js (version 15+) with the App Router for server-side rendering (SSR), incremental static regeneration (ISR), and performance. Default language is English, but structure for internationalization (i18n) using next-intl or similar, with routes under /[lang] (e.g., /en/games). Include SEO optimizations for inner pages, responsive design (mobile-first), and an automated scraping script for weekly game updates. The site should be deployable on Vercel, with a focus on fast loading, security, and user engagement through social sharing and community features.
+
+**1. Branding and Positioning**  
+- **Name**: Labubu Game  
+- **Slogan**: "Build Your Cute Monster World – Play the Best Games for Girls!"  
+- **Target Audience**: Primarily girls and young women interested in casual, creative, and relaxing games. Emphasize fun, creativity, and a safe, ad-light environment.  
+- **Theme**: Kawaii-style with pastel colors (main: #FFB6C1 pink, #98FB98 mint green; accents: rainbow gradients). Use cute monster motifs (e.g., animated Labubu-like creatures) for backgrounds, icons, and loaders. LOGO: A stylized monster with heart eyes and stars, using round fonts like Fredoka. Favicon: Simplified monster head.  
+- **Legal Note**: Design inspired by Labubu trends but original; check for trademark issues and use generic "cute monster" if needed.
+
+**2. Visual Design and UI/UX**  
+- **Style Guide**: Pastel, whimsical, mobile-responsive (Tailwind CSS). Animations: Subtle (e.g., monster bounce on load) using CSS or Framer Motion. Fonts: Round sans-serif (Poppins/Fredoka).  
+- **Layout Structure**:  
+  - **Global Layout (/[lang]/layout.tsx)**: Include Navbar (links: Home, Games, Community, About), Footer (copyright, privacy). Pass lang prop for i18n.  
+  - **Homepage (/[lang]/page.tsx)**: Hero section with animated monster welcome, slogan, CTA button ("Start Playing"). Below: Carousel of featured games, search bar, category filters (e.g., "Dress-Up", "Simulation").  
+  - **Games List (/[lang]/games/page.tsx)**: Grid view (1-col mobile, 3-col desktop) of game cards (title, thumbnail, category, "Play" button). Pagination/search. Use ISR for caching.  
+  - **Game Detail (/[lang]/games/[gameId]/page.tsx)**: Full-screen iframe embed with themed border (monster frames). Include description, share buttons (Instagram/TikTok), related games. Dynamic SSR for SEO.  
+  - **Community (/[lang]/community/page.tsx)**: User uploads (screenshots), votes, comments. Optional registration for saves.  
+  - **404 Page (/[lang]/not-found.tsx)**: Cute monster saying "Game Not Found!" with back button.  
+- **Responsiveness**: Media queries for devices; iframes auto-scale.  
+- **Accessibility**: Alt texts, semantic HTML, ARIA labels.
+
+**3. Functionality and Content**  
+- **Core Features**:  
+  - Game Aggregation: Embed via <iframe src="external-url" width="100%" height="600" sandbox="allow-scripts allow-same-origin" allowFullScreen />. Sources: Free HTML5 from Poki/Y8/CrazyGames. Categories: Labubu-themed (monster customization), Dress-Up & Makeup, Simulation (shops/farms), Nurturing & Romance, Adventure & Puzzles. Start with 100+ games.  
+  - Unique Twist: "Blind Box Mode" – Random game/monster generator for surprise. Virtual currency earned from play, redeemable for custom monster accessories.  
+  - Social: Share buttons, community voting ("Cutest Design").  
+  - User Features: Optional login (via NextAuth) for favorites; search/filter by category/tag.  
+- **i18n Setup**: Default 'en'; routes under /[lang]. Use middleware for locale detection (Accept-Language header, fallback 'en'). Dictionary loader from JSON files (public/locales/en.json). Scalable: Add 'es', 'fr' later without refactoring.  
+- **Data Management**: MongoDB for games (schema: title, embedUrl, description, thumbnail, category, lang). Fetch via API routes.  
+- **Automated Updates**: Include a scraping script (scripts/scrapeGames.js) using axios/cheerio/Puppeteer to collect new games weekly from Poki/Y8/etc. Schedule via Vercel Cron (/api/update-games/route.ts) with revalidatePath for cache refresh.
+
+**4. Technical Stack and Implementation**  
+- **Frontend**: Next.js App Router, React components (e.g., GameCard.tsx, IframePlayer.tsx). Tailwind CSS for styling.  
+- **Backend**: Next.js API routes for data fetching/updates. MongoDB (via mongoose) for persistence.  
+- **i18n Details**: Middleware redirects / to /en; generateStaticParams includes langs.  
+- **SEO for Inner Pages**: Dynamic Metadata API (e.g., generateMetadata in game detail: title, description, OG images). Sitemap.ts for all URLs. Structured data (JSON-LD for games). ISR (revalidate=3600) for lists; SSR for details.  
+- **Performance**: Lazy-load iframes (Intersection Observer), image optimization (next/image), caching (React.cache).  
+- **Security**: Sandbox iframes, HTTPS, no invasive ads.  
+- **File Structure**:  
+  - app/[lang]/(pages and layouts)  
+  - components/(UI reusables)  
+  - lib/(i18n.ts, data.ts)  
+  - public/locales/(en.json)  
+  - scripts/(scrapeGames.js)  
+  - middleware.ts, next.config.js  
+- **Scraping Script Example**: Node.js script to fetch/parse girls' games from Poki, save to DB, run weekly via cron. Handle errors, dedupe.  
+- **Deployment**: Vercel (auto-optimizes Next.js). Environment vars: MONGO_URI.  
+
+**5. Development Workflow**  
+- Setup: npx create-next-app@latest --ts --tailwind --app --src-dir. Install: next-intl, mongoose, puppeteer, node-cron.  
+- Testing: Unit (Jest), e2e (Playwright). Lighthouse for SEO/performance.  
+- Marketing: SEO keywords ("girls games", "Labubu dress-up"). Promote on TikTok/X with monster themes.  
+- Expansion: Add AR filters, mobile app wrapper, more langs.  
+- Budget/Time: 1-2 months for MVP; low-cost (free Vercel/MongoDB Atlas).  
+
+**6. Success Metrics**: 10K MAU in 3 months; >5min session time; high SEO rankings for "girls online games".
+
+This prompt provides a self-contained blueprint. Generate the code accordingly, starting with the file structure and core pages.
+
+## README.md Document
+
+```markdown
+# Labubu Game
+
+![Labubu Game Logo](public/logo.png) <!-- Assume you have a logo image -->
+
+A fun, cute monster-themed online game aggregator for girls! Discover and play free HTML5 games like dress-up, makeup, simulations, and more, embedded seamlessly. Built with Next.js for fast performance, SEO, and scalability. Inspired by 2025 Labubu trends, but with original designs.
+
+## Table of Contents
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
+- [Running Locally](#running-locally)
+- [Deployment](#deployment)
+- [Automated Updates](#automated-updates)
+- [i18n and SEO](#i18n-and-seo)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Features
+- **Game Aggregation**: Embed 100+ free games via iframes from Poki, Y8, etc., categorized for girls (e.g., dress-up, nurturing).
+- **Cute Theme**: Pastel designs with monster animations; "Blind Box" random features.
+- **Social & Community**: Share games, upload screenshots, vote on designs.
+- **Mobile-First**: Responsive UI for phones/tablets.
+- **i18n Ready**: Defaults to English; easy to add languages.
+- **SEO Optimized**: Dynamic metadata, sitemaps for inner game pages.
+- **Auto-Updates**: Weekly scraping of new games via cron jobs.
+- **Security**: Sandboxed iframes, optional user auth.
+
+## Tech Stack
+- **Framework**: Next.js (App Router, SSR/ISR)
+- **Styling**: Tailwind CSS
+- **Database**: MongoDB (via Mongoose)
+- **i18n**: Custom middleware with JSON dictionaries
+- **Scraping**: Axios/Cheerio/Puppeteer
+- **Scheduling**: Vercel Cron or node-cron
+- **Other**: React, next-intl (optional expansion)
+
+## Installation
+1. Clone the repo:
+   ```
+   git clone https://github.com/yourusername/labubu-game.git
+   cd labubu-game
+   ```
+2. Install dependencies:
+   ```
+   npm install
+   ```
+3. Set up environment variables (.env.local):
+   ```
+   MONGODB_URI=mongodb://your-mongo-uri
+   NEXT_PUBLIC_SITE_URL=http://localhost:3000
+   ```
+4. Create initial game data (or run scraper later).
+
+## Running Locally
+1. Start the dev server:
+   ```
+   npm run dev
+   ```
+2. Open http://localhost:3000/en (redirects from /).
+3. Test scraping: `node scripts/scrapeGames.js` (manual run).
+
+## Deployment
+- **Platform**: Vercel (recommended for Next.js).
+1. Push to GitHub.
+2. Connect to Vercel, import repo.
+3. Add env vars in Vercel dashboard.
+4. Deploy – auto-handles cron for /api/update-games.
+- Domain: labubugame.com (configure in Vercel).
+
+## Automated Updates
+- Script: `scripts/scrapeGames.js` fetches from Poki/Y8 weekly.
+- Cron: Configured in vercel.json (e.g., weekly at midnight UTC).
+- After update, revalidates cache for fresh content.
+
+## i18n and SEO
+- **i18n**: Routes like /en/games; add locales by creating JSON files and updating middleware.
+- **SEO**: Dynamic titles/descriptions/OG in page files; ISR for lists; sitemap.ts for crawling.
+
+## Contributing
+- Fork the repo.
+- Create a branch: `git checkout -b feature/new-game-category`.
+- Commit: `git commit -m "Add new feature"`.
+- Push and open PR.
+- Follow code style: ESLint/Prettier enforced.
+
+## License
+MIT License. See [LICENSE](LICENSE) for details.
+
+---
+Built with ❤️ for fun gaming! Questions? Open an issue.
+```

@@ -1,0 +1,20 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/comments/route": "app/api/comments/route.js",
+  "/api/games/route": "app/api/games/route.js",
+  "/api/update-games/route": "app/api/update-games/route.js",
+  "/robots.txt/route": "app/robots.txt/route.js",
+  "/sitemap.xml/route": "app/sitemap.xml/route.js",
+  "/[locale]/about/page": "app/[locale]/about/page.js",
+  "/[locale]/community/page": "app/[locale]/community/page.js",
+  "/[locale]/favorites/page": "app/[locale]/favorites/page.js",
+  "/[locale]/games/[gameId]/page": "app/[locale]/games/[gameId]/page.js",
+  "/[locale]/game/page": "app/[locale]/game/page.js",
+  "/[locale]/games/page": "app/[locale]/games/page.js",
+  "/[locale]/profile/page": "app/[locale]/profile/page.js",
+  "/[locale]/notifications/page": "app/[locale]/notifications/page.js",
+  "/[locale]/users/page": "app/[locale]/users/page.js",
+  "/[locale]/users/[userId]/page": "app/[locale]/users/[userId]/page.js",
+  "/[locale]/play/[gameId]/page": "app/[locale]/play/[gameId]/page.js",
+  "/[locale]/page": "app/[locale]/page.js"
+}

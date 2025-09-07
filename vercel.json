@@ -1,0 +1,13 @@
+{
+  "crons": [
+    {
+      "path": "/api/update-games",
+      "schedule": "0 0 * * 0"
+    }
+  ],
+  "functions": {
+    "src/app/api/update-games/route.ts": {
+      "maxDuration": 300
+    }
+  }
+}

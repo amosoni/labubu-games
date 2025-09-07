@@ -1,0 +1,20 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/api/comments/route": "/api/comments",
+  "/api/games/route": "/api/games",
+  "/api/update-games/route": "/api/update-games",
+  "/robots.txt/route": "/robots.txt",
+  "/sitemap.xml/route": "/sitemap.xml",
+  "/[locale]/about/page": "/[locale]/about",
+  "/[locale]/community/page": "/[locale]/community",
+  "/[locale]/favorites/page": "/[locale]/favorites",
+  "/[locale]/games/[gameId]/page": "/[locale]/games/[gameId]",
+  "/[locale]/game/page": "/[locale]/game",
+  "/[locale]/games/page": "/[locale]/games",
+  "/[locale]/profile/page": "/[locale]/profile",
+  "/[locale]/notifications/page": "/[locale]/notifications",
+  "/[locale]/users/page": "/[locale]/users",
+  "/[locale]/users/[userId]/page": "/[locale]/users/[userId]",
+  "/[locale]/play/[gameId]/page": "/[locale]/play/[gameId]",
+  "/[locale]/page": "/[locale]"
+}
