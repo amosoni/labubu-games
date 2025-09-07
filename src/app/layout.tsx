@@ -16,8 +16,7 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
-      <body>
-        {children}
+      <head>
         {/* Google tag (gtag.js) */}
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-LGK50XTFZQ" strategy="afterInteractive" />
         <Script id="ga-gtag" strategy="afterInteractive">
@@ -28,6 +27,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
             gtag('config', 'G-LGK50XTFZQ');
           `}
         </Script>
+      </head>
+      <body>
+        {children}
       </body>
     </html>
   );
