@@ -1,9 +1,10 @@
 import { MetadataRoute } from 'next';
 import { sampleGames } from '@/lib/gameData';
+import { seoConfig } from '@/lib/seo';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://labubu-games.vercel.app';
-  const locales = ['en', 'es', 'fr'];
+  const baseUrl = seoConfig.siteUrl;
+  const locales = seoConfig.locales;
   
   const staticPages = [
     '',

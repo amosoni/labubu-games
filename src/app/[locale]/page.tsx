@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 // Removed framer-motion on homepage to avoid vendor chunk runtime issues
 import { Search, Filter, Heart, Star, Eye, Clock, Users, ChevronDown } from 'lucide-react';
 import MonsterIcon from '@/components/ui/MonsterIcon';
@@ -58,34 +58,36 @@ export default function HomePage({ params }: HomePageProps) {
     }
   }, []);
 
-  const toggleFavorite = (gameId: string) => {
+  const toggleFavorite = useCallback((gameId: string) => {
     const newFavorites = favorites.includes(gameId)
       ? favorites.filter(id => id !== gameId)
       : [...favorites, gameId];
     setFavorites(newFavorites);
     localStorage.setItem('labubu-favorites', JSON.stringify(newFavorites));
-  };
+  }, [favorites]);
 
-  const filteredGames = sampleGames.filter((game: Partial<IGame>) => {
-    const matchesSearch = game.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         game.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         game.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    const matchesCategory = selectedCategory === 'all' || game.category === selectedCategory;
-    
-    return matchesSearch && matchesCategory;
-  }).sort((a: Partial<IGame>, b: Partial<IGame>) => {
-    switch (sortBy) {
-      case 'popularity':
-        return (b.popularity || 0) - (a.popularity || 0);
-      case 'newest':
-        return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
-      case 'alphabetical':
-        return (a.title || '').localeCompare(b.title || '');
-      default:
-        return 0;
-    }
-  });
+  const filteredGames = useMemo(() => {
+    return sampleGames.filter((game: Partial<IGame>) => {
+      const matchesSearch = game.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           game.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           game.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+      
+      const matchesCategory = selectedCategory === 'all' || game.category === selectedCategory;
+      
+      return matchesSearch && matchesCategory;
+    }).sort((a: Partial<IGame>, b: Partial<IGame>) => {
+      switch (sortBy) {
+        case 'popularity':
+          return (b.popularity || 0) - (a.popularity || 0);
+        case 'newest':
+          return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+        case 'alphabetical':
+          return (a.title || '').localeCompare(b.title || '');
+        default:
+          return 0;
+      }
+    });
+  }, [searchTerm, selectedCategory, sortBy]);
 
   // Pick a featured game for the hero iframe
   const featuredGame = (sampleGames.find(g => g.featured) || sampleGames[0]) as Partial<IGame> | undefined;
@@ -152,6 +154,7 @@ export default function HomePage({ params }: HomePageProps) {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-12 pr-4 py-4 text-lg border-2 border-gray-200 rounded-full focus:border-pink-500 focus:outline-none shadow-lg"
+                  aria-label="Search for games"
                 />
               </div>
             </div>
@@ -160,6 +163,8 @@ export default function HomePage({ params }: HomePageProps) {
             <button
               onClick={() => setShowFilters(!showFilters)}
               className="inline-flex items-center gap-2 px-6 py-3 bg-white rounded-full shadow-lg hover:shadow-xl transition-shadow"
+              aria-expanded={showFilters}
+              aria-controls="filters-panel"
             >
               <Filter size={20} />
               Filters
@@ -168,7 +173,11 @@ export default function HomePage({ params }: HomePageProps) {
           </div>
 
           {/* Filters */}
-          <div className={`overflow-hidden transition-all duration-300 ${showFilters ? 'opacity-100 max-h-[800px]' : 'opacity-0 max-h-0'}`}>
+          <div 
+            id="filters-panel"
+            className={`overflow-hidden transition-all duration-300 ${showFilters ? 'opacity-100 max-h-[800px]' : 'opacity-0 max-h-0'}`}
+            aria-hidden={!showFilters}
+          >
             <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Categories */}

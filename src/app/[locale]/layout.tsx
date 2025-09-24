@@ -2,37 +2,68 @@ import { ReactNode } from 'react';
 import { notFound } from 'next/navigation';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import StructuredData from '@/components/seo/StructuredData';
+import { seoConfig } from '@/lib/seo';
 import { Metadata } from 'next';
 import Script from 'next/script';
 
 const locales = ['en', 'es', 'fr'];
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://labubugame.app'),
+  metadataBase: new URL(seoConfig.siteUrl),
   robots: {
     index: true,
-    follow: true
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    }
   },
   icons: {
-    icon: '/favicon.ico'
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
   },
-  title: 'Labubu Game - Cute Monster Games for Girls',
-  description: 'Build your cute monster world and play the best games for girls! Dress-up, makeup, simulation, and more kawaii games.',
-  keywords: 'labubu, cute games, girls games, monster games, dress up, makeup, kawaii',
+  title: {
+    default: 'Labubu Game - Cute Monster Games for Girls',
+    template: '%s | Labubu Game'
+  },
+  description: 'Build your cute monster world and play the best games for girls! Dress-up, makeup, simulation, and more kawaii games. Free online browser games.',
+  keywords: ['labubu', 'cute games', 'girls games', 'monster games', 'dress up', 'makeup', 'kawaii', 'online games', 'browser games', 'free games'],
+  authors: [{ name: 'Labubu Game Team' }],
+  creator: 'Labubu Game',
+  publisher: 'Labubu Game',
   alternates: {
-    canonical: `https://labubugame.app`,
-    languages: Object.fromEntries(locales.map(l => [l, `https://labubugame.app/${l}`]))
+    canonical: seoConfig.siteUrl,
+    languages: Object.fromEntries(locales.map(l => [l, `${seoConfig.siteUrl}/${l}`]))
   },
   openGraph: {
     title: 'Labubu Game - Cute Monster Games for Girls',
     description: 'Build your cute monster world and play the best games for girls!',
     type: 'website',
-    locale: 'en'
+    locale: 'en_US',
+    url: seoConfig.siteUrl,
+    siteName: seoConfig.siteName,
+    images: [
+      {
+        url: '/images/The-World-of-Labubu.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Labubu Games - Cute Monster Games',
+      }
+    ]
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Labubu Game - Cute Monster Games for Girls',
-    description: 'Build your cute monster world and play the best games for girls!'
+    description: 'Build your cute monster world and play the best games for girls!',
+    images: ['/images/The-World-of-Labubu.jpg']
+  },
+  verification: {
+    google: seoConfig.googleVerification,
   }
 };
 
@@ -54,6 +85,34 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale}>
+      <head>
+        {/* Google Analytics - 优先加载 */}
+        <Script 
+          src={`https://www.googletagmanager.com/gtag/js?id=${seoConfig.gaId}`}
+          strategy="beforeInteractive"
+        />
+        <Script id="ga-gtag" strategy="beforeInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${seoConfig.gaId}', {
+              page_title: document.title,
+              page_location: window.location.href,
+              send_page_view: true,
+              custom_map: {
+                'custom_parameter_1': 'locale'
+              }
+            });
+            gtag('config', '${seoConfig.gaId}', {
+              locale: '${locale}'
+            });
+          `}
+        </Script>
+        
+        {/* 结构化数据 */}
+        <StructuredData type="website" locale={locale} />
+      </head>
       <body>
         <div className="min-h-screen bg-gradient-rainbow">
           <Navbar locale={locale} />
@@ -62,16 +121,6 @@ export default async function LocaleLayout({
           </main>
           <Footer locale={locale} />
         </div>
-        {/* Google tag (gtag.js) */}
-        <Script src="https://www.googletagmanager.com/gtag/js?id=G-LGK50XTFZQ" strategy="afterInteractive" />
-        <Script id="ga-gtag" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);} 
-            gtag('js', new Date());
-            gtag('config', 'G-LGK50XTFZQ');
-          `}
-        </Script>
       </body>
     </html>
   );

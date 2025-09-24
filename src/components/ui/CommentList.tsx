@@ -40,13 +40,13 @@ export default function CommentList({ gameId }: CommentListProps) {
   }, [fetchComments]);
 
   const handleLike = (commentId: string) => {
+    // TODO: 实现点赞功能
     // 这里可以添加点赞功能
-    console.log('Liked comment:', commentId);
   };
 
   const handleReport = (commentId: string) => {
+    // TODO: 实现举报功能
     // 这里可以添加举报功能
-    console.log('Reported comment:', commentId);
   };
 
   if (loading) {

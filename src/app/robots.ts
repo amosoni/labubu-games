@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next';
+import { seoConfig } from '@/lib/seo';
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://labubugame.com';
+  const baseUrl = seoConfig.siteUrl;
   
   return {
     rules: {

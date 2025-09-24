@@ -9,13 +9,10 @@ interface GamePageProps {
 
 // 生成元数据 - 简化版本
 export async function generateMetadata({ params }: GamePageProps): Promise<Metadata> {
-  console.log('🔍 generateMetadata called!');
-  
   try {
     const resolvedParams = await params;
     const gameId = resolvedParams.gameId;
     const locale = resolvedParams.locale || 'en';
-    console.log('🎮 generateMetadata - gameId:', gameId);
     
     // 查找游戏数据
     const game = sampleGames.find(g => {
@@ -23,10 +20,7 @@ export async function generateMetadata({ params }: GamePageProps): Promise<Metad
       return titleSlug === gameId || g._id === gameId;
     });
 
-    console.log('🎯 generateMetadata - found game:', game?.title);
-
     if (!game) {
-      console.log('❌ generateMetadata - Game not found');
       return {
         title: 'Game Not Found | Labubu Games',
         description: 'The requested game could not be found.',
@@ -38,7 +32,6 @@ export async function generateMetadata({ params }: GamePageProps): Promise<Metad
     const gameImage = game.thumbnailUrl || '/images/Labubu-Merge.jpg';
 
     const fullTitle = `${gameTitle} - Play Online | Labubu Games`;
-    console.log('📝 generateMetadata - generated title:', fullTitle);
 
     const canonicalPath = `/${locale}/play/${gameId}`;
     return {

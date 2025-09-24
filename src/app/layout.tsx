@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import Script from 'next/script';
 import { Metadata } from 'next';
 import './globals.css';
 
@@ -16,18 +15,6 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
-      <head>
-        {/* Google tag (gtag.js) */}
-        <Script src="https://www.googletagmanager.com/gtag/js?id=G-LGK50XTFZQ" strategy="afterInteractive" />
-        <Script id="ga-gtag" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);} 
-            gtag('js', new Date());
-            gtag('config', 'G-LGK50XTFZQ');
-          `}
-        </Script>
-      </head>
       <body>
         {children}
       </body>

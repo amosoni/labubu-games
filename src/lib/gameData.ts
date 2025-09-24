@@ -8,8 +8,11 @@ export const sampleGames: Partial<IGame>[] = [
     thumbnailUrl: "/images/Labubu-Merge.jpg",
     category: "puzzle",
     tags: ["labubu", "merge", "puzzle", "cute"],
+    language: "en",
     featured: true,
     popularity: 95,
+    createdAt: new Date('2024-01-15'),
+    updatedAt: new Date('2024-01-15'),
   },
   {
     title: "Labubu Doll Mukbang ASMR",
@@ -18,18 +21,24 @@ export const sampleGames: Partial<IGame>[] = [
     thumbnailUrl: "/images/Labubu-Doll-Mukbang-Asmr.jpg",
     category: "simulation",
     tags: ["labubu", "asmr", "mukbang", "relaxing"],
+    language: "en",
     featured: true,
     popularity: 88,
+    createdAt: new Date('2024-01-10'),
+    updatedAt: new Date('2024-01-10'),
   },
   {
     title: "Labubu Merge 1",
     description: "Another version of the popular Labubu merge game!",
     embedUrl: "https://html5.gamedistribution.com/rvvASMiM/3bd8d990c6294379a7755f938a4944b4/index.html",
-    thumbnailUrl: "/images/Labubu-Merge-1.webp", // 确保路径正确
+    thumbnailUrl: "/images/Labubu-Merge-1.webp",
     category: "puzzle",
     tags: ["labubu", "merge", "puzzle", "cute"],
+    language: "en",
     featured: false,
     popularity: 82,
+    createdAt: new Date('2024-01-05'),
+    updatedAt: new Date('2024-01-05'),
   },
 ];
 
@@ -54,11 +63,19 @@ interface NetworkConnection {
 }
 
 export function getGamesByNetworkSpeed(): Partial<IGame>[] {
+  // 检查是否在浏览器环境中
+  if (typeof window === 'undefined') {
+    return sampleGames;
+  }
+  
   const connection = (navigator as unknown as { connection?: NetworkConnection }).connection;
   if (connection) {
     const effectiveType = connection.effectiveType;
     if (effectiveType === 'slow-2g' || effectiveType === '2g') {
-      return sampleGames.filter(game => (game as IGame & { loadTime?: number }).loadTime && (game as IGame & { loadTime?: number }).loadTime! <= 5);
+      return sampleGames.filter(game => {
+        const gameWithLoadTime = game as IGame & { loadTime?: number };
+        return gameWithLoadTime.loadTime && gameWithLoadTime.loadTime <= 5;
+      });
     }
   }
   return sampleGames;
