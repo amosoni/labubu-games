@@ -23,3 +23,4 @@ dist-ssr
 *.sln
 *.sw?
 .env
+\n# Next.js\n.next\n.next/**\n.vercel\n*.tsbuildinfo\ntsconfig.tsbuildinfo\n
