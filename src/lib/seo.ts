@@ -4,7 +4,7 @@ export const seoConfig = {
   siteName: 'Labubu Game',
   siteDescription: 'Build your cute monster world and play the best games for girls!',
   gaId: 'G-LGK50XTFZQ',
-  googleVerification: 'your-google-verification-code', // 如果需要Google Search Console验证，请替换此值
+  googleVerification: 'dbc97d323fee3928', // Google Search Console 验证码（已同步验证文件）
   
   // 社交媒体配置
   social: {
