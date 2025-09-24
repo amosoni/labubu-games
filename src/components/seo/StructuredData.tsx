@@ -1,6 +1,7 @@
 import { sampleGames } from '@/lib/gameData';
 import { seoConfig } from '@/lib/seo';
 import { IGame } from '@/lib/models/Game';
+import Script from 'next/script';
 
 interface StructuredDataProps {
   type?: 'website' | 'game' | 'collection';
@@ -13,8 +14,10 @@ export default function StructuredData({ type = 'website', game, locale = 'en' }
   
   if (type === 'website') {
     return (
-      <script
+      <Script
+        id="ld-website"
         type="application/ld+json"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
@@ -67,8 +70,10 @@ export default function StructuredData({ type = 'website', game, locale = 'en' }
 
   if (type === 'game' && game) {
     return (
-      <script
+      <Script
+        id={`ld-game-${(game._id || game.title || 'game').toString()}`}
         type="application/ld+json"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
@@ -93,7 +98,7 @@ export default function StructuredData({ type = 'website', game, locale = 'en' }
             "aggregateRating": game.popularity ? {
               "@type": "AggregateRating",
               "ratingValue": game.popularity / 20, // 转换为5星制
-              "ratingCount": Math.floor(Math.random() * 100) + 50,
+              "ratingCount": 100 + (game.popularity || 0),
               "bestRating": 5,
               "worstRating": 1
             } : undefined
@@ -105,8 +110,10 @@ export default function StructuredData({ type = 'website', game, locale = 'en' }
 
   if (type === 'collection') {
     return (
-      <script
+      <Script
+        id="ld-collection"
         type="application/ld+json"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
