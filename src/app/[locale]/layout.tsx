@@ -86,30 +86,6 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <head>
-        {/* Google Analytics - 优先加载 */}
-        <Script 
-          src={`https://www.googletagmanager.com/gtag/js?id=${seoConfig.gaId}`}
-          strategy="beforeInteractive"
-        />
-        <Script id="ga-gtag" strategy="beforeInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${seoConfig.gaId}', {
-              page_title: document.title,
-              page_location: window.location.href,
-              send_page_view: true,
-              custom_map: {
-                'custom_parameter_1': 'locale'
-              }
-            });
-            gtag('config', '${seoConfig.gaId}', {
-              locale: '${locale}'
-            });
-          `}
-        </Script>
-        
         {/* 结构化数据 */}
         <StructuredData type="website" locale={locale} />
       </head>
@@ -121,6 +97,21 @@ export default async function LocaleLayout({
           </main>
           <Footer locale={locale} />
         </div>
+        {/* Google Analytics - 客户端加载，避免 SSR/CSR 不一致 */}
+        <Script 
+          src={`https://www.googletagmanager.com/gtag/js?id=${seoConfig.gaId}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga-gtag" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${seoConfig.gaId}', {
+              send_page_view: true
+            });
+          `}
+        </Script>
       </body>
     </html>
   );
