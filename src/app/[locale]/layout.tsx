@@ -86,6 +86,21 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <head>
+        {/* Google Search Console 验证 - 直接放在 head 中 */}
+        <meta name="google-site-verification" content="dbc97d323fee3928" />
+        
+        {/* Google Analytics - 必须在 <head> 部分用于验证 */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-LGK50XTFZQ"></script>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-LGK50XTFZQ', {
+              send_page_view: true
+            });
+          `
+        }} />
         {/* 结构化数据 */}
         <StructuredData type="website" locale={locale} />
       </head>
@@ -97,21 +112,6 @@ export default async function LocaleLayout({
           </main>
           <Footer locale={locale} />
         </div>
-        {/* Google Analytics - 客户端加载，避免 SSR/CSR 不一致 */}
-        <Script 
-          src={`https://www.googletagmanager.com/gtag/js?id=${seoConfig.gaId}`}
-          strategy="afterInteractive"
-        />
-        <Script id="ga-gtag" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${seoConfig.gaId}', {
-              send_page_view: true
-            });
-          `}
-        </Script>
       </body>
     </html>
   );

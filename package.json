@@ -9,7 +9,8 @@
     "lint": "next lint",
     "scrape": "node scripts/scrapeGames.js",
     "type-check": "tsc --noEmit",
-    "test-seo": "node scripts/test-seo.js"
+    "test-seo": "node scripts/test-seo.js",
+    "verify-ownership": "node scripts/verify-ownership.js"
   },
   "dependencies": {
     "@types/node": "^22.0.0",
