@@ -1,6 +1,10 @@
 ﻿/** @type {import('next').NextConfig} */
 
 const nextConfig = {
+	eslint: {
+		// Avoid failing Vercel builds due to lint warnings/errors; we lint in CI locally
+		ignoreDuringBuilds: true,
+	},
 	images: {
 		remotePatterns: [
 			{ protocol: 'http', hostname: 'localhost' },
