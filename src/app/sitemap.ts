@@ -12,6 +12,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/community',
     '/users',
     '/about',
+    '/privacy',
+    '/terms',
+    '/contact',
   ];
 
   const urls: MetadataRoute.Sitemap = [];

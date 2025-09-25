@@ -59,6 +59,12 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   handler satisfies AppPageConfig<"/[locale]/community">
 }
 
+// Validate ../../src/app/[locale]/contact/page.tsx
+{
+  const handler = {} as typeof import("../../src/app/[locale]/contact/page.js")
+  handler satisfies AppPageConfig<"/[locale]/contact">
+}
+
 // Validate ../../src/app/[locale]/favorites/page.tsx
 {
   const handler = {} as typeof import("../../src/app/[locale]/favorites/page.js")
@@ -101,10 +107,22 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   handler satisfies AppPageConfig<"/[locale]/play/[gameId]">
 }
 
+// Validate ../../src/app/[locale]/privacy/page.tsx
+{
+  const handler = {} as typeof import("../../src/app/[locale]/privacy/page.js")
+  handler satisfies AppPageConfig<"/[locale]/privacy">
+}
+
 // Validate ../../src/app/[locale]/profile/page.tsx
 {
   const handler = {} as typeof import("../../src/app/[locale]/profile/page.js")
   handler satisfies AppPageConfig<"/[locale]/profile">
+}
+
+// Validate ../../src/app/[locale]/terms/page.tsx
+{
+  const handler = {} as typeof import("../../src/app/[locale]/terms/page.js")
+  handler satisfies AppPageConfig<"/[locale]/terms">
 }
 
 // Validate ../../src/app/[locale]/users/[userId]/page.tsx
@@ -123,6 +141,12 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 {
   const handler = {} as typeof import("../../src/app/page.js")
   handler satisfies AppPageConfig<"/">
+}
+
+// Validate ../../src/app/test-games/page.tsx
+{
+  const handler = {} as typeof import("../../src/app/test-games/page.js")
+  handler satisfies AppPageConfig<"/test-games">
 }
 
 // Validate ../../src/app/api/comments/route.ts

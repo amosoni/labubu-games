@@ -5,6 +5,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Search, Filter, Heart, Star, Eye, Clock, Users, ChevronDown } from 'lucide-react';
 import MonsterIcon from '@/components/ui/MonsterIcon';
 import { sampleGames } from '@/lib/gameData';
+import { slugify } from '@/lib/slug';
 import { IGame } from '@/lib/models/Game';
 // NOTE: 首页是客户端组件，元数据在 layout 里全局提供
 
@@ -37,12 +38,12 @@ export default function HomePage({ params }: HomePageProps) {
     { id: 'all', name: 'All Games', icon: '🎮' },
     { id: 'puzzle', name: 'Puzzle', icon: '🧩' },
     { id: 'simulation', name: 'Simulation', icon: '🏠' },
+    { id: 'monster', name: 'Monster', icon: '👹' },
     { id: 'dress-up', name: 'Dress Up', icon: '👗' },
     { id: 'makeup', name: 'Makeup', icon: '💄' },
     { id: 'nurturing', name: 'Nurturing', icon: '👶' },
     { id: 'adventure', name: 'Adventure', icon: '🗺️' },
     { id: 'romance', name: 'Romance', icon: '💕' },
-    { id: 'monster', name: 'Monster', icon: '👹' },
   ];
 
   const sortOptions = [
@@ -67,7 +68,7 @@ export default function HomePage({ params }: HomePageProps) {
   }, [favorites]);
 
   const filteredGames = useMemo(() => {
-    return sampleGames.filter((game: Partial<IGame>) => {
+    const filtered = sampleGames.filter((game: Partial<IGame>) => {
       const matchesSearch = game.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            game.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            game.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -87,6 +88,14 @@ export default function HomePage({ params }: HomePageProps) {
           return 0;
       }
     });
+    
+    // 调试信息
+    console.log('Total games:', sampleGames.length);
+    console.log('Filtered games:', filtered.length);
+    console.log('Selected category:', selectedCategory);
+    console.log('Search term:', searchTerm);
+    
+    return filtered;
   }, [searchTerm, selectedCategory, sortBy]);
 
   // Pick a featured game for the hero iframe
@@ -233,11 +242,11 @@ export default function HomePage({ params }: HomePageProps) {
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Editor’s Picks</h2>
           <div className="flex gap-4 overflow-x-auto pb-2">
             {(sampleGames.filter(g => g.featured).length ? sampleGames.filter(g => g.featured) : sampleGames).slice(0, 8).map((g, idx) => {
-              const slug = (g._id || g.title?.toLowerCase().replace(/\s+/g, '-') || `pick-${idx}`);
+              const slug = (g._id || slugify(g.title) || `pick-${idx}`);
               return (
-                <div key={`pick-${slug}`} className="min-w-[380px] bg-white rounded-xl shadow hover:shadow-lg transition-shadow flex">
+                <div key={`pick-${slug}-${idx}`} className="min-w-[380px] bg-white rounded-xl shadow hover:shadow-lg transition-shadow flex">
                   <div className="w-40 aspect-[4/3] rounded-l-xl overflow-hidden">
-                    <img loading="lazy" src={g.thumbnailUrl || '/images/Labubu-Merge.jpg'} alt={g.title || ''} className="w-full h-full object-cover" />
+                    <img loading="lazy" decoding="async" src={g.thumbnailUrl || '/images/Labubu-Merge.jpg'} alt={`${g.title || 'Game'} online game thumbnail`} className="w-full h-full object-cover" />
                   </div>
                   <div className="p-4 flex-1 flex flex-col">
                     <div className="font-semibold text-gray-800 line-clamp-1">{g.title}</div>
@@ -259,11 +268,11 @@ export default function HomePage({ params }: HomePageProps) {
               .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
               .slice(0, 8)
               .map((g, idx) => {
-                const slug = (g._id || g.title?.toLowerCase().replace(/\s+/g, '-') || `new-${idx}`);
+                const slug = (g._id || slugify(g.title) || `new-${idx}`);
                 return (
-                  <div key={`new-${slug}`} className="min-w-[380px] bg-white rounded-xl shadow hover:shadow-lg transition-shadow flex">
+                  <div key={`new-${slug}-${idx}`} className="min-w-[380px] bg-white rounded-xl shadow hover:shadow-lg transition-shadow flex">
                     <div className="w-40 aspect-[4/3] rounded-l-xl overflow-hidden">
-                      <img loading="lazy" src={g.thumbnailUrl || '/images/Labubu-Merge.jpg'} alt={g.title || ''} className="w-full h-full object-cover" />
+                      <img loading="lazy" decoding="async" src={g.thumbnailUrl || '/images/Labubu-Merge.jpg'} alt={`${g.title || 'Game'} online game thumbnail`} className="w-full h-full object-cover" />
                     </div>
                     <div className="p-4 flex-1 flex flex-col">
                       <div className="font-semibold text-gray-800 line-clamp-1">{g.title}</div>
@@ -285,11 +294,11 @@ export default function HomePage({ params }: HomePageProps) {
               .sort((a, b) => (b.popularity || 0) - (a.popularity || 0))
               .slice(0, 8)
               .map((g, idx) => {
-                const slug = (g._id || g.title?.toLowerCase().replace(/\s+/g, '-') || `hot-${idx}`);
+                const slug = (g._id || slugify(g.title) || `hot-${idx}`);
                 return (
-                  <div key={`hot-${slug}`} className="min-w-[380px] bg-white rounded-xl shadow hover:shadow-lg transition-shadow flex">
+                  <div key={`hot-${slug}-${idx}`} className="min-w-[380px] bg-white rounded-xl shadow hover:shadow-lg transition-shadow flex">
                     <div className="w-40 aspect-[4/3] rounded-l-xl overflow-hidden">
-                      <img loading="lazy" src={g.thumbnailUrl || '/images/Labubu-Merge.jpg'} alt={g.title || ''} className="w-full h-full object-cover" />
+                      <img loading="lazy" decoding="async" src={g.thumbnailUrl || '/images/Labubu-Merge.jpg'} alt={`${g.title || 'Game'} online game thumbnail`} className="w-full h-full object-cover" />
                     </div>
                     <div className="p-4 flex-1 flex flex-col">
                       <div className="font-semibold text-gray-800 line-clamp-1">{g.title}</div>
@@ -315,79 +324,85 @@ export default function HomePage({ params }: HomePageProps) {
 
         {filteredGames.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredGames.map((game: Partial<IGame>, index: number) => (
+            {filteredGames.map((game: Partial<IGame>, index: number) => {
+              const gameId = slugify(game.title) || `game-${index}`;
+              return (
               <div
-                key={game._id || index}
-                className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-shadow cursor-pointer"
-                onClick={() => {
-                  const gameId = game._id || game.title?.toLowerCase().replace(/\s+/g, '-');
-                  window.location.href = `/${locale}/play/${gameId}`;
-                }}
-              >
-                {/* Media */}
-                <div className="relative">
-                  <div className="w-full aspect-[16/9] overflow-hidden rounded-t-2xl">
-                    <img
+                key={`${gameId}-${index}`}
+                  className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-shadow cursor-pointer"
+                  onClick={() => {
+                    window.location.href = `/${locale}/play/${gameId}`;
+                  }}
+                >
+                  {/* Media */}
+                  <div className="relative">
+                    <div className="w-full aspect-[16/9] overflow-hidden rounded-t-2xl">
+                      <img
+                      loading="lazy"
+                      decoding="async"
                       src={game.thumbnailUrl || '/images/Labubu-Merge.jpg'}
-                      alt={game.title || ''}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  {/* Featured badge */}
-                  {game.featured && (
-                    <span className="absolute top-4 left-4 bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow">
-                      Featured
-                    </span>
-                  )}
-                  {/* Favorite */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleFavorite(game._id || '');
-                    }}
-                    className={`absolute top-4 right-4 p-2 rounded-full shadow ${
-                      favorites.includes(game._id || '') ? 'bg-pink-500 text-white' : 'bg-white/90 text-gray-700 hover:bg-pink-500 hover:text-white'
-                    }`}
-                  >
-                    <Heart size={18} fill={favorites.includes(game._id || '') ? 'currentColor' : 'none'} />
-                  </button>
-                </div>
-
-                {/* Body */}
-                <div className="p-5">
-                  <h3 className="text-2xl font-extrabold text-gray-900 mb-1 leading-snug line-clamp-2">{game.title}</h3>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-3">{game.description}</p>
-
-                  {/* Metrics */}
-                  <div className="flex items-center gap-6 text-sm text-gray-600 mb-5">
-                    <div className="flex items-center gap-1"><Eye size={16} />{game.popularity || 0}%</div>
-                    <div className="flex items-center gap-1"><Clock size={16} />5-10 min</div>
-                    <div className="flex items-center gap-1"><Users size={16} />1P</div>
-                  </div>
-
-                  {/* CTA */}
-                  <div className="flex items-center gap-3">
+                      alt={`${game.title || 'Game'} online game thumbnail`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.src = '/images/Labubu-Merge.jpg';
+                        }}
+                      />
+                    </div>
+                    {/* Featured badge */}
+                    {game.featured && (
+                      <span className="absolute top-4 left-4 bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow">
+                        Featured
+                      </span>
+                    )}
+                    {/* Favorite */}
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        const gameId = game._id || game.title?.toLowerCase().replace(/\s+/g, '-');
-                        window.location.href = `/${locale}/play/${gameId}`;
+                        toggleFavorite(gameId);
                       }}
-                      className="flex-1 h-11 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold shadow hover:shadow-lg"
+                      className={`absolute top-4 right-4 p-2 rounded-full shadow ${
+                        favorites.includes(gameId) ? 'bg-pink-500 text-white' : 'bg-white/90 text-gray-700 hover:bg-pink-500 hover:text-white'
+                      }`}
                     >
-                      Play Now
-                    </button>
-                    <button
-                      onClick={(e) => e.stopPropagation()}
-                      className="w-11 h-11 rounded-xl bg-gray-100 text-gray-700 hover:bg-pink-100 hover:text-pink-600 grid place-items-center"
-                      aria-label="Bookmark"
-                    >
-                      <Star size={20} />
+                      <Heart size={18} fill={favorites.includes(gameId) ? 'currentColor' : 'none'} />
                     </button>
                   </div>
+
+                  {/* Body */}
+                  <div className="p-5">
+                    <h3 className="text-2xl font-extrabold text-gray-900 mb-1 leading-snug line-clamp-2">{game.title}</h3>
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">{game.description}</p>
+
+                    {/* Metrics */}
+                    <div className="flex items-center gap-6 text-sm text-gray-600 mb-5">
+                      <div className="flex items-center gap-1"><Eye size={16} />{game.popularity || 0}%</div>
+                      <div className="flex items-center gap-1"><Clock size={16} />5-10 min</div>
+                      <div className="flex items-center gap-1"><Users size={16} />1P</div>
+                    </div>
+
+                    {/* CTA */}
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.location.href = `/${locale}/play/${gameId}`;
+                        }}
+                        className="flex-1 h-11 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold shadow hover:shadow-lg"
+                      >
+                        Play Now
+                      </button>
+                      <button
+                        onClick={(e) => e.stopPropagation()}
+                        className="w-11 h-11 rounded-xl bg-gray-100 text-gray-700 hover:bg-pink-100 hover:text-pink-600 grid place-items-center"
+                        aria-label="Bookmark"
+                      >
+                        <Star size={20} />
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
           /* 空状态 */

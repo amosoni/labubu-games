@@ -7,6 +7,7 @@ import { IGame } from '@/lib/models/Game';
 import CommentForm from '@/components/ui/CommentForm';
 import CommentList from '@/components/ui/CommentList';
 import { sampleGames } from '@/lib/gameData';
+import { slugify } from '@/lib/slug';
 
 interface GamePageClientProps {
   game: Partial<IGame>;
@@ -127,7 +128,7 @@ export default function GamePageClient({ game, locale, gameId }: GamePageClientP
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
               {/* Game Thumbnail/Player */}
               <div className="aspect-video bg-gradient-to-br from-pink-100 to-purple-100 relative">
-                {game.embedUrl ? (
+                {game.embedUrl && !/crazygames\.com|miniplay\.com/.test(game.embedUrl) ? (
                   <iframe
                     id="game-iframe"
                     src={game.embedUrl}
@@ -143,13 +144,20 @@ export default function GamePageClient({ game, locale, gameId }: GamePageClientP
                       alt={game.title || ''}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                      <button
-                        onClick={handlePlay}
-                        className="w-16 h-16 bg-pink-500 text-white rounded-full flex items-center justify-center hover:bg-pink-600 transition-colors"
-                      >
-                        <Play size={24} />
-                      </button>
+                    <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center gap-3 p-4 text-center">
+                      <div className="text-white text-sm max-w-md">
+                        {game.embedUrl ? 'This provider blocks embedding. Open the game in a new tab.' : 'No playable URL available.'}
+                      </div>
+                      {game.embedUrl && (
+                        <a
+                          href={game.embedUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-5 py-3 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-colors"
+                        >
+                          Open Game
+                        </a>
+                      )}
                     </div>
                   </div>
                 )}
@@ -292,7 +300,7 @@ export default function GamePageClient({ game, locale, gameId }: GamePageClientP
                   .filter((g) => g.title !== game.title && (g.category === game.category || g.tags?.some(t => game.tags?.includes(t || ''))))
                   .slice(0, 4)
                   .map((g, idx) => {
-                    const slug = (g.title || '').toLowerCase().replace(/\s+/g, '-');
+                    const slug = slugify(g.title || '');
                     return (
                       <Link
                         key={`${slug}-${idx}`}

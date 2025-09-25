@@ -57,6 +57,28 @@ export default function Footer({ locale }: FooterProps) {
                   About
                 </Link>
               </li>
+              <li>
+                <Link href={`/${locale}/contact`} className="text-white text-opacity-80 hover:text-white transition-colors">
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Legal Links */}
+          <div>
+            <h3 className="font-semibold mb-4">Legal</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link href={`/${locale}/privacy`} className="text-white text-opacity-80 hover:text-white transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${locale}/terms`} className="text-white text-opacity-80 hover:text-white transition-colors">
+                  Terms of Service
+                </Link>
+              </li>
             </ul>
           </div>
 

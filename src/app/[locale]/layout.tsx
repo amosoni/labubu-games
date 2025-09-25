@@ -89,18 +89,21 @@ export default async function LocaleLayout({
         {/* Google Search Console 验证 - 直接放在 head 中 */}
         <meta name="google-site-verification" content="dbc97d323fee3928" />
         
-        {/* Google Analytics - 必须在 <head> 部分用于验证 */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-LGK50XTFZQ"></script>
-        <script dangerouslySetInnerHTML={{
-          __html: `
+        {/* Google Analytics - 使用Next.js Script组件避免hydration错误 */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-LGK50XTFZQ"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', 'G-LGK50XTFZQ', {
               send_page_view: true
             });
-          `
-        }} />
+          `}
+        </Script>
         {/* 结构化数据 */}
         <StructuredData type="website" locale={locale} />
       </head>

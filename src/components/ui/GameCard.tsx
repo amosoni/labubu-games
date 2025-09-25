@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Play, AlertCircle, Wifi, WifiOff } from 'lucide-react';
 import Link from 'next/link';
 import { IGame } from '@/lib/models/Game';
-import Image from 'next/image';
+// import Image from 'next/image';
 
 interface GameCardProps {
   game: Partial<IGame> & { _id?: string };
@@ -67,18 +67,14 @@ export default function GameCard({ game, locale, featured = false }: GameCardPro
         className={`block ${gameStatus === 'error' ? 'pointer-events-none opacity-50' : ''}`}
       >
         <div className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 overflow-hidden">
-          {/* 游戏缩略图 - 使用高质量图片组件 */}
+          {/* 游戏缩略图 - 使用普通img标签 */}
           <div className="relative aspect-square overflow-hidden">
-        <Image
-              src={game.thumbnailUrl || '/images/placeholder.jpg'}
+            <img
+              src={game.thumbnailUrl || '/images/Labubu-Merge.jpg'}
               alt={game.title || 'Game'}
-              fill
-              className="object-cover group-hover:scale-110 transition-transform duration-300"
-              quality={90} // 提高图片质量
-              priority={false} // 前6张图片优先加载
-              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
               onError={(e) => {
-                e.currentTarget.src = '/images/placeholder.jpg';
+                e.currentTarget.src = '/images/Labubu-Merge.jpg';
               }}
             />
             

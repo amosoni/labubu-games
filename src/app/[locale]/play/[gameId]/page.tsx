@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { sampleGames } from '@/lib/gameData';
 import GamePageClient from './GamePageClient';
+import { slugify } from '@/lib/slug';
 
 interface GamePageProps {
   params: Promise<{ locale: string; gameId: string }>;
@@ -15,10 +16,7 @@ export async function generateMetadata({ params }: GamePageProps): Promise<Metad
     const locale = resolvedParams.locale || 'en';
     
     // 查找游戏数据
-    const game = sampleGames.find(g => {
-      const titleSlug = g.title?.toLowerCase().replace(/\s+/g, '-');
-      return titleSlug === gameId || g._id === gameId;
-    });
+    const game = sampleGames.find(g => slugify(g.title) === gameId || g._id === gameId);
 
     if (!game) {
       return {
@@ -92,10 +90,7 @@ export default async function GamePage({ params }: GamePageProps) {
     const gameId = resolvedParams.gameId;
     
     // 查找游戏数据
-    const game = sampleGames.find(g => {
-      const titleSlug = g.title?.toLowerCase().replace(/\s+/g, '-');
-      return titleSlug === gameId || g._id === gameId;
-    });
+    const game = sampleGames.find(g => slugify(g.title) === gameId || g._id === gameId);
 
     if (!game) {
   return (
