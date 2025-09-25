@@ -450,6 +450,11 @@ export default function HomePage({ params }: HomePageProps) {
           </div>
         </div>
       </section>
+
+      {/* GSC HTML verification mirror (served at /[locale]/googledbc97d323fee3928) */}
+      <section className="sr-only">
+        google-site-verification: googledbc97d323fee3928.html
+      </section>
     </div>
   );
 }
